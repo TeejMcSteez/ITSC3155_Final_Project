@@ -6,15 +6,18 @@ from ..schemas import order_details
 from ..schemas import sandwiches as sandwich
 from ..dependencies.database import engine, get_db
 
-routers = APIRouter(
+router = APIRouter(
     tags = ['Payments'],
     prefix="/payments"
 )
 
 
-
-@routers.post("/payments/{order_id}{payment}", response_model=order_details.OrderDetail)
-def process_payment(order_id: int, payment: float, response_model=order_details.OrderDetail, db: Session = Depends(get_db)):
+"""
+    Proccesses payment from order id and payment amount.
+    Returns error or order object.
+"""
+@router.post("/payments/{order_id}/{payment}", response_model=order_details.OrderDetail)
+def process_payment(order_id: int, payment: float, db: Session = Depends(get_db)):
     
     order = controller.read_one(db, order_id)
     sandwich_id = order.sandwich_id
