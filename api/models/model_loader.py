@@ -1,6 +1,7 @@
 from . import orders, order_details, recipes, sandwiches, resources
 
 from ..dependencies.database import engine
+from models.menu import MenuItem
 
 
 def index():
