@@ -1,6 +1,4 @@
-from typing import Optional
 from pydantic import BaseModel
-from ..models.payments import Payments
 
 class PaymentsBase(BaseModel):
     order_details_id: int
