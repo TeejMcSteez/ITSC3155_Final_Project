@@ -51,7 +51,8 @@ def read_one(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     return item
-
+# TODO
+# I think this is wrong I dont need to pass a dict just to flip the boolean
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Payments).filter(model.Payments.id == item_id)
