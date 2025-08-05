@@ -5,18 +5,23 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 def create(db: Session, request):
+    #Requesting required information from customer
     new_item = model.Order(
         customer_name=request.customer_name,
-        description=request.description
+        #Deleted request.description, I don't really think that's all that necessary
+        order_type = request.order_type
     )
-
+    #Need to randomly generate a tracking number for this order
     try:
         db.add(new_item)
         db.commit()
         db.refresh(new_item)
     except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+        error = str(e.__dict__.get('orig', e))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Database error: {error}"
+        )
 
     return new_item
 
