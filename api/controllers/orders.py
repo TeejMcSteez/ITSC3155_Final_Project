@@ -2,15 +2,12 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
+from schemas.orders import OrderCreate, OrderUpdate
 
 
 def create(db: Session, request):
     #Requesting required information from customer
-    new_item = model.Order(
-        customer_name=request.customer_name,
-        #Deleted request.description, I don't really think that's all that necessary
-        order_type = request.order_type
-    )
+    new_item = model.Order(**request.dict())
     #Need to randomly generate a tracking number for this order
     try:
         db.add(new_item)
@@ -25,14 +22,13 @@ def create(db: Session, request):
 
     return new_item
 
-
+#Returns all order data
 def read_all(db: Session):
     try:
-        result = db.query(model.Order).all()
+        return db.query(model.Order).all()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return result
 
 
 def read_one(db: Session, item_id):
@@ -40,10 +36,11 @@ def read_one(db: Session, item_id):
         item = db.query(model.Order).filter(model.Order.id == item_id).first()
         if not item:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+        return item
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return item
+
 
 
 def update(db: Session, item_id, request):
@@ -71,3 +68,5 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
