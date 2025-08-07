@@ -9,6 +9,10 @@ router = APIRouter(
     prefix="/payments"
 )
 
+@router.get("/revenue", response_model=int)
+def get_revenue(db: Session = Depends(get_db)):
+    return controller.get_revenue(db=db)
+
 @router.post("/{order_details_id}", response_model=schema.PaymentsCreate)
 def create(request: schema.PaymentsCreate, order_details_id, db: Session = Depends(get_db)):
     return controller.create(db=db, order_details_id=order_details_id, request=request)
@@ -24,7 +28,7 @@ def read_one(item_id: int, db: Session = Depends(get_db)):
 @router.put("/{item_id}", response_model=schema.PaymentsUpdate)
 def update(item_id: int, request: schema.PaymentsUpdate, db: Session = Depends(get_db)):
     return controller.update(db=db, request=request, item_id=item_id)
-# Removing for now as it isnt needed
-# @router.delete("/{item_id}")
-# def delete(item_id: int, db: Session = Depends(get_db)):
-#     return controller.delete(db=db, item_id=item_id)
+
+@router.delete("/{item_id}")
+def delete(item_id: int, db: Session = Depends(get_db)):
+    return controller.delete(db=db, item_id=item_id)
