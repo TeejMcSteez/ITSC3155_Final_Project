@@ -11,3 +11,4 @@ class MenuItem(Base):
     available = Column(Boolean, default=True)
 
     payments = relationship("Payments", back_populates="menu_items")
+    order_details = relationship("OrderDetail", back_populates="menu_items")

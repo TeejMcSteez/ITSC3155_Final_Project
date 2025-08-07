@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 def create(db: Session, request):
     new_item = model.OrderDetail(
         order_id=request.order_id,
-        sandwich_id=request.sandwich_id,
+        menu_items_id=request.menu_items_id,
         amount=request.amount
     )
 

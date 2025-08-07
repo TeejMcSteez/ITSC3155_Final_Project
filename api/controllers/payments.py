@@ -3,7 +3,7 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import payments as model
 from sqlalchemy.exc import SQLAlchemyError
 # Used to auto-fill price from db
-from ..controllers import orders, order_details, sandwiches
+from ..controllers import orders, order_details, menu
 
 
 
@@ -12,7 +12,7 @@ def create(db: Session, order_details_id, request):
     if od is None:
         raise HTTPException(status_code=404, detail="Order not found!")
     
-    sandwich = sandwiches.read_one(db, od.sandwich_id)
+    sandwich = menu.read_one(db, od.sandwich_id)
     if sandwich is None:
         raise HTTPException(status_code=404, detail="Sandwich not found!")
     
