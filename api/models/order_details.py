@@ -11,6 +11,8 @@ class OrderDetail(Base):
     menu_items_id = Column(Integer, ForeignKey("menu_items.id"))
     amount = Column(Integer, index=True, nullable=False)
     tracking_number = Column(String(36), unique=True)
+    type = Column(String(20))
+    status = Column(String(20))
 
     payments = relationship("Payments", back_populates="order_details")
     order = relationship("Order", back_populates="order_details")
