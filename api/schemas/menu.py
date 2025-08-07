@@ -1,13 +1,26 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from typing import Optional
 
-class MenuItemCreate(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    description: str | None = None
-    price: float = Field(..., gt=0)
-    available: bool = True
+class MenuItemBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    available: bool
 
-class MenuItemResponse(MenuItemCreate):
+class MenuItemCreate(MenuItemBase):
+    name: str
+    description: Optional[str] = None
+    price: float
+    available: Optional[bool] = None
+
+class MenuItemUpdate(MenuItemBase):
+    name: str
+    description: Optional[str] = None
+    price: float
+    available: Optional[bool] = None
+
+class MenuItem(MenuItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True

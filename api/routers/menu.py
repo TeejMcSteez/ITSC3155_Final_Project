@@ -1,11 +1,31 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, FastAPI, status, Response
 from sqlalchemy.orm import Session
-from api.dependencies.database import get_db
-from api.schemas.menu import MenuItemCreate, MenuItemResponse
-from api.controllers.menu import create_menu_item
+from ..controllers import menu as controller
+from ..schemas import menu as schema
+from ..dependencies.database import engine, get_db
 
-router = APIRouter(prefix="/menu", tags=["menu"])
+router = APIRouter(prefix="/menu", tags=["Menu"])
 
-@router.post("/", response_model=MenuItemResponse)
-def create_menu(item: MenuItemCreate, db: Session = Depends(get_db)):
-    return create_menu_item(db, item)
+@router.post("/", response_model=schema.MenuItem)
+def create(request: schema.MenuItemCreate, db: Session = Depends(get_db)):
+    return controller.create(db=db, request=request)
+
+
+@router.get("/", response_model=list[schema.MenuItem])
+def read_all(db: Session = Depends(get_db)):
+    return controller.read_all(db)
+
+
+@router.get("/{item_id}", response_model=schema.MenuItem)
+def read_one(item_id: int, db: Session = Depends(get_db)):
+    return controller.read_one(db, item_id=item_id)
+
+
+@router.put("/{item_id}", response_model=schema.MenuItem)
+def update(item_id: int, request: schema.MenuItemUpdate, db: Session = Depends(get_db)):
+    return controller.update(db=db, request=request, item_id=item_id)
+
+
+@router.delete("/{item_id}")
+def delete(item_id: int, db: Session = Depends(get_db)):
+    return controller.delete(db=db, item_id=item_id)
