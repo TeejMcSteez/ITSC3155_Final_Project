@@ -2,12 +2,14 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import order_details as model
 from sqlalchemy.exc import SQLAlchemyError
+import uuid
 
 
 def create(db: Session, request):
     new_item = model.OrderDetail(
         order_id=request.order_id,
-        menu_items_id=request.menu_items_id,
+        menu_items_id=request.menu_item_id,
+        tracking_number=str(uuid.uuid4()),
         amount=request.amount
     )
 

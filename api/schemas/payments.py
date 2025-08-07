@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class PaymentsBase(BaseModel):
     order_details_id: int
     order_id: int
-    sandwich_id: int
+    menu_items_id: int
     isPaid: bool = False
 
 class PaymentsCreate(BaseModel):
@@ -16,7 +16,7 @@ class PaymentsSchema(BaseModel):
     id: int
     order_details_id: int
     order_id: int
-    sandwich_id: int
+    menu_items_id: int
     isPaid: bool
 
     class ConfigDict:

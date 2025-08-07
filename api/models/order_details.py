@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME, Uuid
+from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from ..dependencies.database import Base
@@ -10,7 +10,7 @@ class OrderDetail(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     menu_items_id = Column(Integer, ForeignKey("menu_items.id"))
     amount = Column(Integer, index=True, nullable=False)
-    tracking_number = Column(Uuid, unique=True)
+    tracking_number = Column(String(36), unique=True)
 
     payments = relationship("Payments", back_populates="order_details")
     order = relationship("Order", back_populates="order_details")

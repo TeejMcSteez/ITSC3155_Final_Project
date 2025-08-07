@@ -22,7 +22,7 @@ class OrderDetail(OrderDetailBase):
     id: int
     order_id: int
     tracking_number: str
-    menu_item: MenuItem
+    menu_item: Optional[MenuItem] = None
 
     class ConfigDict:
         from_attributes = True

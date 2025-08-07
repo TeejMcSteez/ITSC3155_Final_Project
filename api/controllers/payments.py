@@ -12,15 +12,15 @@ def create(db: Session, order_details_id, request):
     if od is None:
         raise HTTPException(status_code=404, detail="Order not found!")
     
-    sandwich = menu.read_one(db, od.sandwich_id)
-    if sandwich is None:
+    menu_item = menu.read_one(db, od.menu_items_id)
+    if menu_item is None:
         raise HTTPException(status_code=404, detail="Sandwich not found!")
     
     new_item = model.Payments(
         order_details_id=order_details_id,
         order_id=od.order_id,
-        sandwich_id=od.sandwich_id,
-        sandwich_price=sandwich.first().price,
+        menu_items_id=od.menu_items_id,
+        price=menu_item.price,
         isPaid = False
     )
 
@@ -30,7 +30,7 @@ def create(db: Session, order_details_id, request):
         db.refresh(new_item)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     
     return new_item
 
@@ -39,7 +39,7 @@ def read_all(db: Session):
         result = db.query(model.Payments).all()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return result
 
 def read_one(db: Session, item_id):
@@ -49,7 +49,7 @@ def read_one(db: Session, item_id):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
 # TODO
 # I think this is wrong I dont need to pass a dict just to flip the boolean
@@ -76,5 +76,5 @@ def delete(db: Session, item_id):
         db.commit()
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
