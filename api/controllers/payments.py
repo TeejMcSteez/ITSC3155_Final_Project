@@ -44,7 +44,7 @@ def read_all(db: Session):
 
 def read_one(db: Session, item_id):
     try:
-        item = db.query(model.Payments).filter(model.Payments.id == item_id)
+        item = db.query(model.Payments).filter(model.Payments.id == item_id).first()
         if not item:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     except SQLAlchemyError as e:
